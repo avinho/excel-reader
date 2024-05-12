@@ -10,12 +10,20 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 
+/**
+ * Classe para processar relatórios em formato xls.
+ */
 public class ExcelRelatorio {
     private static final DataFormatter formatter = new DataFormatter();
     private static final Pattern pattern = Pattern.compile("[^a-zA-Z]");
 
-    public static void readExcel(String fileName) {
-        try(FileInputStream file = new FileInputStream(fileName)) {
+    /**
+     * Método para ler um arquivo Excel e processar seus dados.
+     *
+     * @param filePath O caminho do arquivo Excel a ser lido.
+     */
+    public static void readExcel(String filePath) {
+        try(FileInputStream file = new FileInputStream(filePath)) {
             HSSFWorkbook workbook = new HSSFWorkbook(file);
             HSSFSheet sheet = workbook.getSheetAt(0);
             Map<String, List<Row>> map = processSheet(sheet);
@@ -28,6 +36,12 @@ public class ExcelRelatorio {
         }
     }
 
+    /**
+     * Processa as linhas de um relatório para calcular saldo e quantidade por seguradora.
+     *
+     * @param corretor O nome do corretor associado às linhas.
+     * @param rows     As linhas a serem processadas.
+     */
     private static void processRows(String corretor, List<Row> rows) {
         Map<String, Seguradora> seguradoras = new HashMap<>();
         DecimalFormat df = new DecimalFormat("##,##0.00#");
@@ -62,18 +76,26 @@ public class ExcelRelatorio {
         System.out.println("------------------------------------------------");
     }
 
+    /**
+     * Processa a planilha do Excel para identificar e agrupar intervalos de linhas.
+     *
+     * @param sheet A planilha a ser processada.
+     * @return Um mapa de intervalos de linhas agrupadas por corretor.
+     */
     private static Map<String, List<Row>> processSheet(HSSFSheet sheet) {
         Map<String, List<Row>> dataMap = new HashMap<>();
         List<Row> lastRows = new ArrayList<>();
         int startRow = 2;
         int endRow;
 
+        // Identifica os intervalos de linhas
         for (Row row : sheet) {
             if (row.getPhysicalNumberOfCells() == 1) {
                 lastRows.add(row);
             }
         }
 
+        // Processa os intervalos de linhas e adicionar ao mapa
         for (Row lastRow : lastRows) {
             endRow = lastRow.getRowNum();
             Row nextRow = sheet.getRow(endRow + 1);

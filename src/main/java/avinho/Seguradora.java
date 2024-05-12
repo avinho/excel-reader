@@ -1,6 +1,5 @@
 package avinho;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Seguradora {

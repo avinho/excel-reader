@@ -3,9 +3,6 @@ package avinho;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -13,6 +10,9 @@ public class Main {
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         FileNameExtensionFilter filter = new FileNameExtensionFilter("xls", "xls", "XLS");
         chooser.setFileFilter(filter);
+
+        /*
+        * MULTI FILES
         chooser.setMultiSelectionEnabled(true);
         int returnVal = chooser.showOpenDialog(new JFrame());
         if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -21,6 +21,13 @@ public class Main {
                 String path = file.getPath();
                 ExcelRelatorio.readExcel(path);
             }));
+        }*/
+
+        int returnVal = chooser.showOpenDialog(new JFrame());
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = chooser.getSelectedFile();
+            String path = file.getAbsolutePath();
+            ExcelRelatorio.readExcel(path);
         }
         System.exit(0);
     }
