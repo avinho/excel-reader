@@ -39,11 +39,12 @@ public class ExcelRelatorio {
     /**
      * Processa as linhas de um relatório para calcular saldo e quantidade por seguradora.
      *
-     * @param corretor O nome do corretor associado às linhas.
+     * @param nomeCorretor O nome do corretor associado às linhas.
      * @param rows     As linhas a serem processadas.
      */
-    private static void processRows(String corretor, List<Row> rows) {
-        Map<String, Seguradora> seguradoras = new HashMap<>();
+    private static void processRows(String nomeCorretor, List<Row> rows) {
+        Map<String, Seguradora> seguradoras = new TreeMap<>();
+        Corretor corretor = new Corretor(nomeCorretor, 0.0);
         DecimalFormat df = new DecimalFormat("##,##0.00#");
         double total = 0;
         int totalLancamentos = 0;
@@ -67,7 +68,8 @@ public class ExcelRelatorio {
             seguradora.addQuantidade();
             totalLancamentos++;
         }
-        System.out.println("---------------------- " + corretor + " ----------------------");
+        corretor.setSaldo(total);
+        System.out.println("---------------------- " + nomeCorretor + " ----------------------");
         for (Seguradora seguradora : seguradoras.values()) {
             System.out.println("Seguradora: " + seguradora.getNome() + " - " + "Saldo: " + df.format(seguradora.getSaldo()) + " - " + "Qtd: " + seguradora.getQuantidade());
         }
